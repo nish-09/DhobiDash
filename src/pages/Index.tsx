@@ -43,20 +43,39 @@ const Index = () => {
     <div className="min-h-screen">
       {/* Navigation */}
       <nav className="bg-white/80 backdrop-blur-sm border-b sticky top-0 z-50">
-  <div className="max-w-6xl mx-auto px-6 py-4">
+  <div className="max-w-6xl mx-auto px-6 py-1">
     <div className="flex items-center justify-between">
       <div className="flex items-center space-x-2">
         <img
           src="/logo.jpg"
           alt="Dhobi Dash Logo"
-          className="w-8 h-8 object-contain"
+          className="w-20 h-20"
         />
-        <span className="text-xl font-bold text-primary">Dhobi Dash</span>
+        <span className="text-3xl font-bold text-primary">Dhobi Dash</span>
       </div>
-      ...
-    </div>
-  </div>
-</nav>
+            <div className="hidden md:flex items-center space-x-6">
+              <a
+  href="#services"
+  className="text-lg font-medium text-muted-foreground hover:text-primary transition-smooth"
+>
+  Services
+</a>
+<a
+  href="#about"
+  className="text-lg font-medium text-muted-foreground hover:text-primary transition-smooth"
+>
+  About
+</a>
+
+            </div>
+            <Link to="/auth">
+              <Button variant="speed" size="sm">
+                {user ? 'Dashboard' : 'Sign In'}
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </nav>
 
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-clean">
@@ -129,7 +148,7 @@ const Index = () => {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 bg-white">
+      <section id="about" className="py-20 bg-white">
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center space-y-4 mb-16">
             <h2 className="text-3xl font-bold text-primary">Why Choose Dhobi Dash?</h2>
