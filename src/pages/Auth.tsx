@@ -96,7 +96,7 @@ export default function Auth() {
             <Truck className="w-8 h-8 text-white" />
           </div>
           <div className="space-y-2">
-            <CardTitle className="text-3xl font-bold text-primary">Dhobi Dash</CardTitle>
+            <CardTitle className="text-3xl font-bold text-primary">DhobiDash</CardTitle>
             <CardDescription className="text-base">20-minute laundry pickup & delivery</CardDescription>
           </div>
         </CardHeader>
