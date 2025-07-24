@@ -43,28 +43,20 @@ const Index = () => {
     <div className="min-h-screen">
       {/* Navigation */}
       <nav className="bg-white/80 backdrop-blur-sm border-b sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <Zap className="w-8 h-8 text-primary" />
-              <span className="text-xl font-bold text-primary">Dhobi Dash</span>
-            </div>
-            <div className="hidden md:flex items-center space-x-6">
-              <a href="#services" className="text-muted-foreground hover:text-primary transition-smooth">
-                Services
-              </a>
-              <a href="#about" className="text-muted-foreground hover:text-primary transition-smooth">
-                About
-              </a>
-            </div>
-            <Link to="/auth">
-              <Button variant="speed" size="sm">
-                {user ? 'Dashboard' : 'Sign In'}
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </nav>
+  <div className="max-w-6xl mx-auto px-6 py-4">
+    <div className="flex items-center justify-between">
+      <div className="flex items-center space-x-2">
+        <img
+          src="/logo.jpg"
+          alt="Dhobi Dash Logo"
+          className="w-8 h-8 object-contain"
+        />
+        <span className="text-xl font-bold text-primary">Dhobi Dash</span>
+      </div>
+      ...
+    </div>
+  </div>
+</nav>
 
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-clean">
@@ -127,7 +119,7 @@ const Index = () => {
                   </div>
                   <div>
                     <div className="font-semibold">Next Pickup</div>
-                    <div className="text-sm text-muted-foreground">In 8 minutes</div>
+                    <div className="text-sm text-muted-foreground">In {Math.floor(Math.random() * (20 - 8 + 1)) + 8} minutes</div>
                   </div>
                 </div>
               </div>
@@ -211,7 +203,11 @@ const Index = () => {
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center space-y-4">
             <div className="flex items-center justify-center space-x-2">
-              <Zap className="w-8 h-8" />
+              <img
+          src="/logo.jpg"
+          alt="Dhobi Dash Logo"
+          className="w-8 h-8 object-contain"
+        />
               <span className="text-xl font-bold">Dhobi Dash</span>
             </div>
             <p className="text-primary-foreground/80">Lightning fast laundry service at your fingertips</p>
