@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useAuth } from "@/hooks/useAuth";
-import heroImage from "@/assets/hero-laundry.jpg";
 import { 
   Truck, 
   Clock, 
@@ -117,8 +116,8 @@ const Index = () => {
 
             <div className="relative">
               <img 
-                src={heroImage} 
-                alt="LaundryDash Professional Service"
+                src="/hero-laundry.jpg" 
+                alt="Laundry Hero"
                 className="w-full h-96 lg:h-[500px] object-cover rounded-3xl shadow-elegant"
               />
               <div className="absolute -bottom-6 -left-6 bg-white rounded-2xl p-4 shadow-brand">
