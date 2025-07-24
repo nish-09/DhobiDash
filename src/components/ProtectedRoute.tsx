@@ -12,9 +12,15 @@ export default function ProtectedRoute({ children, requiredRole }: ProtectedRout
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-clean flex items-center justify-center">
-        <div className="text-center space-y-4">
-          <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full mx-auto"></div>
-          <p className="text-muted-foreground">Loading...</p>
+        <div className="text-center space-y-6">
+          <div className="relative">
+            <div className="w-16 h-16 border-4 border-primary/20 border-t-primary rounded-full animate-spin mx-auto"></div>
+            <div className="absolute inset-0 w-16 h-16 border-4 border-transparent border-b-accent rounded-full animate-spin mx-auto" style={{ animationDirection: 'reverse', animationDuration: '0.8s' }}></div>
+          </div>
+          <div className="space-y-2">
+            <h3 className="text-lg font-semibold text-primary">Loading your dashboard</h3>
+            <p className="text-muted-foreground">Please wait while we prepare your experience...</p>
+          </div>
         </div>
       </div>
     );

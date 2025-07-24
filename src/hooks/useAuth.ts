@@ -28,7 +28,7 @@ export const useAuth = () => {
         setUser(session?.user ?? null);
         
         if (session?.user) {
-          // Fetch user profile
+          // Defer profile fetch to prevent deadlock
           setTimeout(async () => {
             try {
               const { data: profileData, error } = await supabase
@@ -39,12 +39,14 @@ export const useAuth = () => {
               
               if (error) {
                 console.error('Error fetching profile:', error);
+                setProfile(null);
                 return;
               }
               
               setProfile(profileData as Profile);
             } catch (error) {
               console.error('Profile fetch error:', error);
+              setProfile(null);
             }
           }, 0);
         } else {
@@ -91,6 +93,55 @@ export const useAuth = () => {
     return { error: null };
   };
 
+  const signUpWithMobile = async (phone: string, fullName: string, role: 'customer' | 'driver' | 'admin') => {
+    const { error } = await supabase.auth.signInWithOtp({
+      phone,
+      options: {
+        data: {
+          full_name: fullName,
+          role: role
+        }
+      }
+    });
+    
+    if (error) {
+      toast.error(error.message);
+      return { error };
+    }
+    
+    toast.success('Check your phone for the OTP code!');
+    return { error: null };
+  };
+
+  const verifyOtp = async (phone: string, otp: string) => {
+    const { error } = await supabase.auth.verifyOtp({
+      phone,
+      token: otp,
+      type: 'sms'
+    });
+    
+    if (error) {
+      toast.error(error.message);
+      return { error };
+    }
+    
+    return { error: null };
+  };
+
+  const signInWithMobile = async (phone: string) => {
+    const { error } = await supabase.auth.signInWithOtp({
+      phone
+    });
+    
+    if (error) {
+      toast.error(error.message);
+      return { error };
+    }
+    
+    toast.success('Check your phone for the OTP code!');
+    return { error: null };
+  };
+
   const signIn = async (email: string, password: string) => {
     const { error } = await supabase.auth.signInWithPassword({
       email,
@@ -120,7 +171,10 @@ export const useAuth = () => {
     profile,
     loading,
     signUp,
+    signUpWithMobile,
     signIn,
+    signInWithMobile,
+    verifyOtp,
     signOut
   };
 };
