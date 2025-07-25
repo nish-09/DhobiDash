@@ -236,7 +236,7 @@ export default function AdminDashboard() {
   const activeOrders = orders.filter(o => ['assigned', 'picked', 'in_laundry', 'ready', 'out_for_delivery'].includes(o.status));
 
   return (
-    <div className="min-h-screen bg-gradient-clean">
+    <div className="min-h-screen">
       <div className="container mx-auto p-6 max-w-7xl">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
@@ -244,9 +244,7 @@ export default function AdminDashboard() {
             <h1 className="text-3xl font-bold text-primary">Admin Dashboard</h1>
             <p className="text-muted-foreground">Welcome, {profile?.full_name}</p>
           </div>
-          <Button variant="outline" onClick={signOut}>
-            Sign Out
-          </Button>
+          {/* Remove any sign out button or sign out logic from this file. */}
         </div>
 
         {/* Stats */}

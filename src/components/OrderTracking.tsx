@@ -32,7 +32,6 @@ const statusSteps = [
 export default function OrderTracking({ order, onBack }: OrderTrackingProps) {
   const [currentOrder, setCurrentOrder] = useState(order);
 
-  // Simulate status updates for demo
   useEffect(() => {
     const statusProgression = ["pending", "picked", "in-laundry", "ready", "delivered"];
     const currentIndex = statusProgression.indexOf(currentOrder.status);
@@ -43,7 +42,7 @@ export default function OrderTracking({ order, onBack }: OrderTrackingProps) {
           ...prev,
           status: statusProgression[currentIndex + 1] as any
         }));
-      }, currentOrder.status === "pending" ? 5000 : 15000); // Faster first transition
+      }, currentOrder.status === "pending" ? 5000 : 15000);
       
       return () => clearTimeout(timer);
     }

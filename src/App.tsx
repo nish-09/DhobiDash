@@ -11,6 +11,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import NotFound from "./pages/NotFound";
 import React, { useState, useEffect, useMemo, useRef } from "react";
+import Navbar from "@/components/Navbar";
 // FloatingLaundryEmojis component and helpers
 const laundryEmojis = [
   { symbol: "🧺" },
@@ -90,13 +91,21 @@ const FloatingLaundryEmojis = () => {
 const queryClient = new QueryClient();
 
 const App = () => (
-  <div style={{ cursor: 'url("data:image/svg+xml,%3Csvg width=\'32\' height=\'32\' viewBox=\'0 0 32 32\' fill=\'none\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Ccircle cx=\'16\' cy=\'16\' r=\'14\' fill=\'%237dd3fc\'/%3E%3Ctext x=\'16\' y=\'22\' text-anchor=\'middle\' font-size=\'18\' fill=\'%23a78bfa\'%3E🧺%3C/text%3E%3C/svg%3E") 16 16, pointer' }}>
-    <FloatingLaundryEmojis />
+  <div
+    className="min-h-screen"
+    style={{
+      background: 'radial-gradient(circle, rgba(219, 247, 255, 1) 0%, rgba(245, 213, 245, 1) 100%)',
+      cursor:
+        'url("data:image/svg+xml,%3Csvg width=\'32\' height=\'32\' viewBox=\'0 0 32 32\' fill=\'none\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Ccircle cx=\'16\' cy=\'16\' r=\'14\' fill=\'%237dd3fc\'/%3E%3Ctext x=\'16\' y=\'22\' text-anchor=\'middle\' font-size=\'18\' fill=\'%23a78bfa\'%3E🧺%3C/text%3E%3C/svg%3E") 16 16, pointer',
+    }}
+  >
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <Navbar />
+          <FloatingLaundryEmojis />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />

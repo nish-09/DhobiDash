@@ -57,7 +57,6 @@ export default function CustomerDashboard() {
 
   const fetchOrders = async () => {
     if (!profile?.id) return;
-    
     try {
       const { data, error } = await supabase
         .from('orders')
@@ -66,11 +65,13 @@ export default function CustomerDashboard() {
           laundry_hubs (
             name,
             address
+          ),
+          driver_profile:profiles!driver_id (
+            full_name
           )
         `)
         .eq('customer_id', profile.id)
         .order('created_at', { ascending: false });
-
       if (error) throw error;
       setOrders(data || []);
     } catch (error) {
@@ -112,7 +113,7 @@ export default function CustomerDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-clean">
+    <div className="min-h-screen">
       <div className="container mx-auto p-6 max-w-6xl">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
@@ -124,9 +125,6 @@ export default function CustomerDashboard() {
             <Button onClick={() => setShowCreateOrder(true)} className="gap-2">
               <Plus className="w-4 h-4" />
               New Order
-            </Button>
-            <Button variant="outline" onClick={signOut}>
-              Sign Out
             </Button>
           </div>
         </div>
@@ -168,8 +166,11 @@ export default function CustomerDashboard() {
                         <span>Est. delivery: {new Date(order.estimated_delivery).toLocaleString()}</span>
                       </div>
                     )}
-                    <div className="pt-2 border-t">
+                    <div className="pt-2 border-t flex flex-col gap-1">
                       <span className="font-semibold">₹{order.total_amount}</span>
+                      {order.driver_profile?.full_name && (
+                        <span className="text-xs text-muted-foreground">Driver: {order.driver_profile.full_name}</span>
+                      )}
                     </div>
                   </CardContent>
                 </Card>

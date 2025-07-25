@@ -210,7 +210,7 @@ export default function DriverDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-clean">
+    <div className="min-h-screen">
       <div className="container mx-auto p-6 max-w-6xl">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
@@ -218,9 +218,7 @@ export default function DriverDashboard() {
             <h1 className="text-3xl font-bold text-primary">Driver Dashboard</h1>
             <p className="text-muted-foreground">Welcome, {profile?.full_name}</p>
           </div>
-          <Button variant="outline" onClick={signOut}>
-            Sign Out
-          </Button>
+          {/* Remove any sign out button or sign out logic from this file. */}
         </div>
 
         {/* Stats */}

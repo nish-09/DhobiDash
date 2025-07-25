@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -6,23 +6,55 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
 import { useAuth } from '@/hooks/useAuth';
-import { Truck, UserCheck, Shield, Mail, Phone } from 'lucide-react';
+import { Truck, UserCheck, Shield, Mail } from 'lucide-react';
 
 export default function Auth() {
-  const { user, profile, signUp, signIn, signUpWithMobile, signInWithMobile, verifyOtp } = useAuth();
+  const { user, profile, signUp, signIn, loading } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [phone, setPhone] = useState('');
-  const [otp, setOtp] = useState('');
   const [fullName, setFullName] = useState('');
   const [role, setRole] = useState<'customer' | 'driver' | 'admin'>('customer');
-  const [loading, setLoading] = useState(false);
-  const [authMethod, setAuthMethod] = useState<'email' | 'mobile'>('email');
-  const [showOtpVerification, setShowOtpVerification] = useState(false);
+  const [formLoading, setFormLoading] = useState(false);
+  const [timedOut, setTimedOut] = useState(false);
+  useEffect(() => {
+    if (!loading) return;
+    const timer = setTimeout(() => setTimedOut(true), 8000); // 8 seconds
+    return () => clearTimeout(timer);
+  }, [loading]);
 
-  // Redirect if already authenticated
+  // Fallback UI if user is set but profile is missing after loading
+  if (!loading && user && !profile) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white/80 animate-fade-in">
+        <div className="flex flex-col items-center">
+          <span className="text-lg text-primary mb-2">No profile found for this user.</span>
+          <span className="text-sm text-muted-foreground">Please contact support or try signing up again.</span>
+        </div>
+      </div>
+    );
+  }
+  if (loading && !timedOut) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white/80 animate-fade-in">
+        <div className="flex flex-col items-center">
+          <div className="w-12 h-12 border-4 border-blue-300 border-t-blue-600 rounded-full animate-spin mb-4"></div>
+          <span className="text-lg text-primary">Loading...</span>
+        </div>
+      </div>
+    );
+  }
+  if (loading && timedOut) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white/80 animate-fade-in">
+        <div className="flex flex-col items-center">
+          <div className="w-12 h-12 border-4 border-blue-300 border-t-blue-600 rounded-full animate-spin mb-4"></div>
+          <span className="text-lg text-primary mb-2">Still loading...</span>
+          <span className="text-sm text-muted-foreground">This is taking longer than usual. Please check your internet connection or try again later.</span>
+        </div>
+      </div>
+    );
+  }
   if (user && profile) {
     switch (profile.role) {
       case 'customer':
@@ -39,40 +71,18 @@ export default function Auth() {
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    setFormLoading(true);
     
-    if (authMethod === 'email') {
-      await signIn(email, password);
-    } else {
-      const result = await signInWithMobile(phone);
-      if (!result.error) {
-        setShowOtpVerification(true);
-      }
-    }
-    setLoading(false);
+    await signIn(email, password);
+    setFormLoading(false);
   };
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    setFormLoading(true);
     
-    if (authMethod === 'email') {
-      await signUp(email, password, fullName, role);
-    } else {
-      const result = await signUpWithMobile(phone, fullName, role);
-      if (!result.error) {
-        setShowOtpVerification(true);
-      }
-    }
-    setLoading(false);
-  };
-
-  const handleOtpVerification = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    
-    await verifyOtp(phone, otp);
-    setLoading(false);
+    await signUp(email, password, fullName, role);
+    setFormLoading(false);
   };
 
   const getRoleIcon = (roleName: string) => {
@@ -89,8 +99,8 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-clean flex items-center justify-center p-4">
-      <Card className="w-full max-w-md shadow-elegant border-0 backdrop-blur-sm bg-white/95">
+    <div className="min-h-screen flex items-center justify-center p-4" style={{ background: 'radial-gradient(circle, rgba(219, 247, 255, 1) 0%, rgba(245, 213, 245, 1) 100%)' }}>
+      <Card className="w-full max-w-md shadow-2xl border-2 border-white/60 backdrop-blur-3xl bg-transparent">
         <CardHeader className="text-center space-y-4 pb-6">
           <div className="w-16 h-16 bg-gradient-brand rounded-full flex items-center justify-center mx-auto">
             <Truck className="w-8 h-8 text-white" />
@@ -101,227 +111,116 @@ export default function Auth() {
           </div>
         </CardHeader>
         <CardContent className="pt-0">
-          {showOtpVerification ? (
-            <div className="space-y-6">
-              <div className="text-center space-y-2">
-                <h3 className="text-lg font-semibold">Enter OTP</h3>
-                <p className="text-sm text-muted-foreground">
-                  We sent a code to {phone}
-                </p>
-              </div>
-              <form onSubmit={handleOtpVerification} className="space-y-4">
+          <Tabs defaultValue="signin" className="space-y-6">
+            <TabsList className="grid w-full grid-cols-2 bg-muted/50">
+              <TabsTrigger value="signin" className="data-[state=active]:bg-white data-[state=active]:shadow-sm">Sign In</TabsTrigger>
+              <TabsTrigger value="signup" className="data-[state=active]:bg-white data-[state=active]:shadow-sm">Sign Up</TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="signin">
+              <form onSubmit={handleSignIn} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="otp">Enter 6-digit code</Label>
-                  <div className="flex justify-center">
-                    <InputOTP
-                      value={otp}
-                      onChange={setOtp}
-                      maxLength={6}
-                    >
-                      <InputOTPGroup>
-                        <InputOTPSlot index={0} />
-                        <InputOTPSlot index={1} />
-                        <InputOTPSlot index={2} />
-                        <InputOTPSlot index={3} />
-                        <InputOTPSlot index={4} />
-                        <InputOTPSlot index={5} />
-                      </InputOTPGroup>
-                    </InputOTP>
-                  </div>
+                  <Label htmlFor="signin-email">Email</Label>
+                  <Input
+                    id="signin-email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
                 </div>
-                <div className="flex space-x-2">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="flex-1"
-                    onClick={() => {
-                      setShowOtpVerification(false);
-                      setOtp('');
-                    }}
-                  >
-                    Back
-                  </Button>
-                  <Button type="submit" variant="brand" className="flex-1" disabled={loading || otp.length !== 6}>
-                    {loading ? (
-                      <div className="flex items-center space-x-2">
-                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                        <span>Verifying...</span>
-                      </div>
-                    ) : 'Verify'}
-                  </Button>
+                <div className="space-y-2">
+                  <Label htmlFor="signin-password">Password</Label>
+                  <Input
+                    id="signin-password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
                 </div>
+                <Button type="submit" variant="brand" className="w-full" disabled={formLoading}>
+                  {formLoading ? (
+                    <div className="flex items-center space-x-2">
+                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                      <span>Signing In...</span>
+                    </div>
+                  ) : 'Sign In'}
+                </Button>
               </form>
-            </div>
-          ) : (
-            <>
-              <div className="flex justify-center mb-6">
-                <div className="flex bg-muted/50 rounded-lg p-1">
-                  <Button
-                    type="button"
-                    variant={authMethod === 'email' ? 'default' : 'ghost'}
-                    size="sm"
-                    onClick={() => setAuthMethod('email')}
-                    className="flex items-center space-x-2"
-                  >
-                    <Mail className="w-4 h-4" />
-                    <span>Email</span>
-                  </Button>
-                  <Button
-                    type="button"
-                    variant={authMethod === 'mobile' ? 'default' : 'ghost'}
-                    size="sm"
-                    onClick={() => setAuthMethod('mobile')}
-                    className="flex items-center space-x-2"
-                  >
-                    <Phone className="w-4 h-4" />
-                    <span>Mobile</span>
-                  </Button>
+            </TabsContent>
+            
+            <TabsContent value="signup">
+              <form onSubmit={handleSignUp} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="signup-name">Full Name</Label>
+                  <Input
+                    id="signup-name"
+                    type="text"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    required
+                  />
                 </div>
-              </div>
-              <Tabs defaultValue="signin" className="space-y-6">
-                <TabsList className="grid w-full grid-cols-2 bg-muted/50">
-                  <TabsTrigger value="signin" className="data-[state=active]:bg-white data-[state=active]:shadow-sm">Sign In</TabsTrigger>
-                  <TabsTrigger value="signup" className="data-[state=active]:bg-white data-[state=active]:shadow-sm">Sign Up</TabsTrigger>
-                </TabsList>
-            
-                <TabsContent value="signin">
-                  <form onSubmit={handleSignIn} className="space-y-4">
-                    {authMethod === 'email' ? (
-                      <>
-                        <div className="space-y-2">
-                          <Label htmlFor="signin-email">Email</Label>
-                          <Input
-                            id="signin-email"
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="signin-password">Password</Label>
-                          <Input
-                            id="signin-password"
-                            type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                          />
-                        </div>
-                      </>
-                    ) : (
-                      <div className="space-y-2">
-                        <Label htmlFor="signin-phone">Mobile Number</Label>
-                        <Input
-                          id="signin-phone"
-                          type="tel"
-                          placeholder="+1234567890"
-                          value={phone}
-                          onChange={(e) => setPhone(e.target.value)}
-                          required
-                        />
-                      </div>
-                    )}
-                    <Button type="submit" variant="brand" className="w-full" disabled={loading}>
-                      {loading ? (
+                <div className="space-y-2">
+                  <Label htmlFor="signup-email">Email</Label>
+                  <Input
+                    id="signup-email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="signup-password">Password</Label>
+                  <Input
+                    id="signup-password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="role">I want to join as a:</Label>
+                  <Select value={role} onValueChange={(value: 'customer' | 'driver' | 'admin') => setRole(value)}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="customer">
                         <div className="flex items-center space-x-2">
-                          <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                          <span>{authMethod === 'email' ? 'Signing In...' : 'Sending Code...'}</span>
+                          {getRoleIcon('customer')}
+                          <span>Customer</span>
                         </div>
-                      ) : authMethod === 'email' ? 'Sign In' : 'Send Code'}
-                    </Button>
-                  </form>
-                </TabsContent>
-            
-                <TabsContent value="signup">
-                  <form onSubmit={handleSignUp} className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="signup-name">Full Name</Label>
-                      <Input
-                        id="signup-name"
-                        type="text"
-                        value={fullName}
-                        onChange={(e) => setFullName(e.target.value)}
-                        required
-                      />
-                    </div>
-                    {authMethod === 'email' ? (
-                      <>
-                        <div className="space-y-2">
-                          <Label htmlFor="signup-email">Email</Label>
-                          <Input
-                            id="signup-email"
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="signup-password">Password</Label>
-                          <Input
-                            id="signup-password"
-                            type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                          />
-                        </div>
-                      </>
-                    ) : (
-                      <div className="space-y-2">
-                        <Label htmlFor="signup-phone">Mobile Number</Label>
-                        <Input
-                          id="signup-phone"
-                          type="tel"
-                          placeholder="+1234567890"
-                          value={phone}
-                          onChange={(e) => setPhone(e.target.value)}
-                          required
-                        />
-                      </div>
-                    )}
-                    <div className="space-y-2">
-                      <Label htmlFor="role">I want to join as a:</Label>
-                      <Select value={role} onValueChange={(value: 'customer' | 'driver' | 'admin') => setRole(value)}>
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="customer">
-                            <div className="flex items-center space-x-2">
-                              {getRoleIcon('customer')}
-                              <span>Customer</span>
-                            </div>
-                          </SelectItem>
-                          <SelectItem value="driver">
-                            <div className="flex items-center space-x-2">
-                              {getRoleIcon('driver')}
-                              <span>Driver</span>
-                            </div>
-                          </SelectItem>
-                          <SelectItem value="admin">
-                            <div className="flex items-center space-x-2">
-                              {getRoleIcon('admin')}
-                              <span>Admin</span>
-                            </div>
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <Button type="submit" variant="brand" className="w-full" disabled={loading}>
-                      {loading ? (
+                      </SelectItem>
+                      <SelectItem value="driver">
                         <div className="flex items-center space-x-2">
-                          <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                          <span>{authMethod === 'email' ? 'Creating Account...' : 'Sending Code...'}</span>
+                          {getRoleIcon('driver')}
+                          <span>Driver</span>
                         </div>
-                      ) : authMethod === 'email' ? 'Create Account' : 'Send Code'}
-                    </Button>
-                  </form>
-                </TabsContent>
-              </Tabs>
-            </>
-          )}
+                      </SelectItem>
+                      <SelectItem value="admin">
+                        <div className="flex items-center space-x-2">
+                          {getRoleIcon('admin')}
+                          <span>Admin</span>
+                        </div>
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <Button type="submit" variant="brand" className="w-full" disabled={formLoading}>
+                  {formLoading ? (
+                    <div className="flex items-center space-x-2">
+                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                      <span>Creating Account...</span>
+                    </div>
+                  ) : 'Create Account'}
+                </Button>
+              </form>
+            </TabsContent>
+          </Tabs>
         </CardContent>
       </Card>
     </div>

@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useAuth } from "@/hooks/useAuth";
@@ -21,15 +21,12 @@ import {
 import CountUp from "react-countup";
 import { Typewriter } from 'react-simple-typewriter';
 
-// FloatingLaundryEmojis component
 const laundryEmojis = [
-  // Emojis
   { symbol: "🧺" },
   { symbol: "🧦" },
   { symbol: "👕" },
   { symbol: "🧼" },
   { symbol: "🩳" },
-  // SVGs with theme colors
   { svg: <svg width="32" height="32" viewBox="0 0 24 24" fill="#7dd3fc" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" /></svg> }, // blue
   { svg: <svg width="32" height="32" viewBox="0 0 24 24" fill="#f472b6" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="4" width="16" height="16" rx="4" /></svg> }, // pink
   { svg: <svg width="32" height="32" viewBox="0 0 24 24" fill="#a78bfa" xmlns="http://www.w3.org/2000/svg"><polygon points="12,2 22,22 2,22" /></svg> }, // purple
@@ -108,6 +105,7 @@ const FloatingLaundryEmojis = () => {
 };
 
 const Index = () => {
+  const location = useLocation();
   const { user, profile } = useAuth();
   const [counterKey, setCounterKey] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -175,88 +173,6 @@ const Index = () => {
   return (
     <div className="min-h-screen" style={{ background: 'radial-gradient(circle, rgba(219, 247, 255, 1) 0%, rgba(245, 213, 245, 1) 100%)', cursor: 'url("data:image/svg+xml,%3Csvg width=\'32\' height=\'32\' viewBox=\'0 0 32 32\' fill=\'none\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Ccircle cx=\'16\' cy=\'16\' r=\'14\' fill=\'%237dd3fc\'/%3E%3Ctext x=\'16\' y=\'22\' text-anchor=\'middle\' font-size=\'18\' fill=\'%23a78bfa\'%3E🧺%3C/text%3E%3C/svg%3E") 16 16, pointer' }}>
       <FloatingLaundryEmojis />
-      {/* Navigation */}
-      <nav className="border-b sticky top-0 z-50 backdrop-blur-sm bg-white/30" style={{ background: 'radial-gradient(circle, rgba(182, 232, 242, 0.85) 0%, rgba(255, 191, 255, 0.85) 100%)', WebkitBackdropFilter: 'blur(4px)', backdropFilter: 'blur(4px)' }}>
-        <div className="max-w-6xl mx-auto px-6 py-1">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <img
-                src="/logo.jpg"
-                alt="DhobiDash Logo"
-                className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 transition-all duration-200"
-              />
-              <span className="text-xl sm:text-2xl md:text-3xl font-bold text-primary transition-all duration-200">DhobiDash</span>
-            </div>
-            {/* Desktop Nav */}
-            <div className="hidden sm:flex items-center gap-2 sm:gap-3 md:gap-4 whitespace-nowrap">
-              <a
-                href="#about"
-                className="text-lg font-medium text-muted-foreground hover:text-primary transition-smooth"
-              >
-                About
-              </a>
-              <a
-                href="#portal"
-                className="text-lg font-medium text-muted-foreground hover:text-primary transition-smooth"
-              >
-                Portal
-              </a>
-              <a
-                href="#contact"
-                className="text-lg font-medium text-muted-foreground hover:text-primary transition-smooth"
-              >
-                Contact
-              </a>
-              <Link to="/auth">
-                <Button variant="speed" size="sm">
-                  {user ? 'Dashboard' : 'Sign In'}
-                </Button>
-              </Link>
-            </div>
-            {/* Mobile Hamburger */}
-            <div className="sm:hidden flex items-center">
-              <button
-                className="p-2 rounded focus:outline-none focus:ring-2 focus:ring-primary"
-                onClick={() => setMenuOpen((v) => !v)}
-                aria-label="Open menu"
-              >
-                <Menu className="w-7 h-7 text-primary" />
-              </button>
-              {menuOpen && (
-                <div className="absolute right-4 top-16 bg-white/90 rounded-xl shadow-lg py-2 px-4 flex flex-col space-y-2 z-50 min-w-[140px] border border-primary/10 animate-fade-in">
-                  <a
-                    href="#about"
-                    className="text-base font-medium text-muted-foreground hover:text-primary transition-smooth py-1"
-                    onClick={() => setMenuOpen(false)}
-                  >
-                    About
-                  </a>
-                  <a
-                    href="#portal"
-                    className="text-base font-medium text-muted-foreground hover:text-primary transition-smooth py-1"
-                    onClick={() => setMenuOpen(false)}
-                  >
-                    Portal
-                  </a>
-                  <a
-                    href="#contact"
-                    className="text-base font-medium text-muted-foreground hover:text-primary transition-smooth py-1"
-                    onClick={() => setMenuOpen(false)}
-                  >
-                    Contact
-                  </a>
-                  <Link to="/auth" onClick={() => setMenuOpen(false)}>
-                    <Button variant="speed" size="sm" className="w-full">
-                      {user ? 'Dashboard' : 'Sign In'}
-                    </Button>
-                  </Link>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </nav>
-
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         <div className="max-w-6xl mx-auto px-6 py-20">
@@ -305,21 +221,16 @@ const Index = () => {
                     </Link>
                   </div>
                   <div className="flex-1 w-full">
-                    <Button variant="outline" size="lg" className="w-full h-14">
-                      <Smartphone className="w-5 h-5 mr-2" />
-                      Track Your Order
-                    </Button>
-                  </div>
-                </div>
-                {/* 2. Next Pickup Card */}
-                <div className="bg-white/30 backdrop-blur-md border border-white/30 rounded-2xl p-3 shadow-brand flex items-center space-x-3 w-full sm:w-52 justify-center mx-auto">
-                  <div className="w-10 h-10 bg-gradient-speed rounded-full flex items-center justify-center">
-                    <Clock className="w-6 h-6 text-white" />
-                  </div>
-                  <div>
-                    <div className="font-semibold text-base">Next Pickup</div>
-                    <div className="text-xs text-muted-foreground">
-                      In {Math.floor(Math.random() * (20 - 8 + 1)) + 8} minutes
+                    <div className="bg-white/30 backdrop-blur-md border border-white/30 rounded-2xl p-3 shadow-brand flex items-center space-x-3 w-full justify-center mx-auto h-14">
+                      <div className="w-10 h-10 bg-gradient-speed rounded-full flex items-center justify-center">
+                        <Clock className="w-6 h-6 text-white" />
+                      </div>
+                      <div>
+                        <div className="font-semibold text-base">Next Pickup</div>
+                        <div className="text-xs text-muted-foreground">
+                          In {Math.floor(Math.random() * (20 - 8 + 1)) + 8} minutes
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
