@@ -431,19 +431,19 @@ const Index = () => {
                 Shiven Shetty
               </div>
               <div className="flex justify-center gap-4 text-2xl">
-                <a href="mailto:david@example.com" aria-label="Mail" className="group relative rounded-full bg-purple-100 hover:bg-purple-300 p-2 transition-all shadow-sm transform hover:scale-125 duration-200">
+                <a href="mailto:shivenpshetty@gmail.com" aria-label="Mail" className="group relative rounded-full bg-purple-100 hover:bg-purple-300 p-2 transition-all shadow-sm transform hover:scale-125 duration-200">
                   <Mail className="text-purple-600 group-hover:text-purple-800 transition-colors duration-200" />
                   <span className="absolute left-1/2 -bottom-7 -translate-x-1/2 text-xs bg-purple-600 text-white rounded px-2 py-1 opacity-0 group-hover:opacity-100 group-hover:translate-y-1 transition-all duration-200 pointer-events-none">Mail</span>
                 </a>
-                <a href="https://linkedin.com/in/davidkim" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="group relative rounded-full bg-blue-100 hover:bg-blue-300 p-2 transition-all shadow-sm transform hover:scale-125 duration-200">
+                <a href="https://linkedin.com/in/shiven-shetty-55b657341" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="group relative rounded-full bg-blue-100 hover:bg-blue-300 p-2 transition-all shadow-sm transform hover:scale-125 duration-200">
                   <Linkedin className="text-blue-600 group-hover:text-blue-800 transition-colors duration-200" />
                   <span className="absolute left-1/2 -bottom-7 -translate-x-1/2 text-xs bg-blue-600 text-white rounded px-2 py-1 opacity-0 group-hover:opacity-100 group-hover:translate-y-1 transition-all duration-200 pointer-events-none">LinkedIn</span>
                 </a>
-                <a href="https://github.com/davidkim" target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="group relative rounded-full bg-gray-100 hover:bg-gray-300 p-2 transition-all shadow-sm transform hover:scale-125 duration-200">
+                <a href="https://github.com/sh1v3n" target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="group relative rounded-full bg-gray-100 hover:bg-gray-300 p-2 transition-all shadow-sm transform hover:scale-125 duration-200">
                   <Github className="text-gray-700 group-hover:text-black transition-colors duration-200" />
                   <span className="absolute left-1/2 -bottom-7 -translate-x-1/2 text-xs bg-gray-700 text-white rounded px-2 py-1 opacity-0 group-hover:opacity-100 group-hover:translate-y-1 transition-all duration-200 pointer-events-none">GitHub</span>
                 </a>
-                <a href="https://instagram.com/davidkim" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="group relative rounded-full bg-pink-100 hover:bg-pink-300 p-2 transition-all shadow-sm transform hover:scale-125 duration-200">
+                <a href="https://instagram.com/shivenshettyyy" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="group relative rounded-full bg-pink-100 hover:bg-pink-300 p-2 transition-all shadow-sm transform hover:scale-125 duration-200">
                   <Instagram className="text-pink-500 group-hover:text-pink-700 transition-colors duration-200" />
                   <span className="absolute left-1/2 -bottom-7 -translate-x-1/2 text-xs bg-pink-500 text-white rounded px-2 py-1 opacity-0 group-hover:opacity-100 group-hover:translate-y-1 transition-all duration-200 pointer-events-none">Instagram</span>
                 </a>
