@@ -190,22 +190,22 @@ const Index = () => {
             {/* Desktop Nav */}
             <div className="hidden sm:flex items-center gap-2 sm:gap-3 md:gap-4 whitespace-nowrap">
               <a
-                href="#portal"
-                className="text-lg font-medium text-muted-foreground hover:text-primary transition-smooth"
-              >
-                Portal
-              </a>
-              <a
                 href="#about"
                 className="text-lg font-medium text-muted-foreground hover:text-primary transition-smooth"
               >
                 About
               </a>
               <a
+                href="#portal"
+                className="text-lg font-medium text-muted-foreground hover:text-primary transition-smooth"
+              >
+                Portal
+              </a>
+              <a
                 href="#contact"
                 className="text-lg font-medium text-muted-foreground hover:text-primary transition-smooth"
               >
-                Contact Us
+                Contact
               </a>
               <Link to="/auth">
                 <Button variant="speed" size="sm">
@@ -225,13 +225,6 @@ const Index = () => {
               {menuOpen && (
                 <div className="absolute right-4 top-16 bg-white/90 rounded-xl shadow-lg py-2 px-4 flex flex-col space-y-2 z-50 min-w-[140px] border border-primary/10 animate-fade-in">
                   <a
-                    href="#portal"
-                    className="text-base font-medium text-muted-foreground hover:text-primary transition-smooth py-1"
-                    onClick={() => setMenuOpen(false)}
-                  >
-                    Portal
-                  </a>
-                  <a
                     href="#about"
                     className="text-base font-medium text-muted-foreground hover:text-primary transition-smooth py-1"
                     onClick={() => setMenuOpen(false)}
@@ -239,11 +232,18 @@ const Index = () => {
                     About
                   </a>
                   <a
+                    href="#portal"
+                    className="text-base font-medium text-muted-foreground hover:text-primary transition-smooth py-1"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    Portal
+                  </a>
+                  <a
                     href="#contact"
                     className="text-base font-medium text-muted-foreground hover:text-primary transition-smooth py-1"
                     onClick={() => setMenuOpen(false)}
                   >
-                    Contact Us
+                    Contact
                   </a>
                   <Link to="/auth" onClick={() => setMenuOpen(false)}>
                     <Button variant="speed" size="sm" className="w-full">
@@ -292,61 +292,68 @@ const Index = () => {
                 </p>
               </div>
 
-              <div className="flex flex-col items-center gap-6">
-                <div className="flex flex-col sm:flex-row gap-4 w-full justify-center">
-                  <Link to="/auth">
-                    <Button variant="speed" size="lg" className="w-full sm:w-auto">
-                      <Clock className="w-5 h-5 mr-2" />
-                      {user ? 'Go to Dashboard' : 'Get Started Now'}
+              {/* Outer Flex Column Container */}
+              <div className="flex flex-col items-center justify-center gap-4">
+                {/* 1. Buttons Row */}
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full max-w-xl">
+                  <div className="flex-1 w-full">
+                    <Link to="/auth" className="block w-full">
+                      <Button variant="speed" size="lg" className="w-full h-14">
+                        <Clock className="w-5 h-5 mr-2" />
+                        {user ? 'Go to Dashboard' : 'Get Started Now'}
+                      </Button>
+                    </Link>
+                  </div>
+                  <div className="flex-1 w-full">
+                    <Button variant="outline" size="lg" className="w-full h-14">
+                      <Smartphone className="w-5 h-5 mr-2" />
+                      Track Your Order
                     </Button>
-                  </Link>
-                  <Button variant="outline" size="lg" className="w-full sm:w-auto">
-                    <Smartphone className="w-5 h-5 mr-2" />
-                    Track Your Order
-                  </Button>
+                  </div>
                 </div>
-                <div className="w-full flex justify-center">
-                  <div className="w-full max-w-lg mx-auto grid grid-cols-3 bg-white/30 backdrop-blur-md border border-white/30 rounded-3xl shadow-sm overflow-hidden">
-                    <div className="text-center px-6 py-4">
-                      <div className="text-2xl font-bold text-primary">
-                        <CountUp key={counterKey + '-20'} start={45} end={20} duration={5} />min
-                      </div>
-                      <div className="text-sm text-muted-foreground">Pickup Time</div>
+                {/* 2. Next Pickup Card */}
+                <div className="bg-white/30 backdrop-blur-md border border-white/30 rounded-2xl p-3 shadow-brand flex items-center space-x-3 w-full sm:w-52 justify-center mx-auto">
+                  <div className="w-10 h-10 bg-gradient-speed rounded-full flex items-center justify-center">
+                    <Clock className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <div className="font-semibold text-base">Next Pickup</div>
+                    <div className="text-xs text-muted-foreground">
+                      In {Math.floor(Math.random() * (20 - 8 + 1)) + 8} minutes
                     </div>
-                    <div className="text-center px-6 py-4 border-l-2 border-white/60">
-                      <div className="text-2xl font-bold text-primary">
-                        <CountUp key={counterKey + '-24'} end={24} duration={1.5} />/<CountUp key={counterKey + '-7'} end={7} duration={1.5} />
-                      </div>
-                      <div className="text-sm text-muted-foreground">Service</div>
+                  </div>
+                </div>
+                {/* 3. Stats Row */}
+                <div className="flex flex-row items-center justify-center gap-2 sm:gap-4 w-full max-w-xl">
+                  <div className="text-center px-2 py-1 sm:px-4 sm:py-2 bg-white/30 rounded-xl shadow-sm flex-1">
+                    <div className="font-bold text-base sm:text-2xl text-primary">
+                      <CountUp key={counterKey + '-20'} start={45} end={20} duration={5} />min
                     </div>
-                    <div className="text-center px-6 py-4 border-l-2 border-white/60">
-                      <div className="text-2xl font-bold text-primary">
-                        <CountUp key={counterKey + '-4.9'} end={4.9} duration={1.5} decimals={1} />★
-                      </div>
-                      <div className="text-sm text-muted-foreground">Rating</div>
+                    <div className="text-xs sm:text-sm text-muted-foreground">Pickup Time</div>
+                  </div>
+                  <div className="text-center px-2 py-1 sm:px-4 sm:py-2 bg-white/30 rounded-xl shadow-sm flex-1">
+                    <div className="font-bold text-base sm:text-2xl text-primary">
+                      <CountUp key={counterKey + '-24'} end={24} duration={1.5} />/<CountUp key={counterKey + '-7'} end={7} duration={1.5} />
                     </div>
+                    <div className="text-xs sm:text-sm text-muted-foreground">Service</div>
+                  </div>
+                  <div className="text-center px-2 py-1 sm:px-4 sm:py-2 bg-white/30 rounded-xl shadow-sm flex-1">
+                    <div className="font-bold text-base sm:text-2xl text-primary">
+                      <CountUp key={counterKey + '-4.9'} end={4.9} duration={1.5} decimals={1} />★
+                    </div>
+                    <div className="text-xs sm:text-sm text-muted-foreground">Rating</div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="relative">
+            {/* Wrap image and card in a flex-col container for centering on mobile */}
+            <div className="relative flex flex-col items-center">
               <img
                 src="/hero-laundry.jpg"
                 alt="Laundry Hero"
                 className="w-full h-72 sm:h-80 md:h-96 lg:h-[500px] object-contain"
               />
-              <div className="absolute -bottom-16 -left-16 bg-white/30 backdrop-blur-md border border-white/30 rounded-2xl p-4 shadow-brand">
-                <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 bg-gradient-speed rounded-full flex items-center justify-center">
-                    <Clock className="w-6 h-6 text-white" />
-                  </div>
-                  <div>
-                    <div className="font-semibold">Next Pickup</div>
-                    <div className="text-sm text-muted-foreground">In {Math.floor(Math.random() * (20 - 8 + 1)) + 8} minutes</div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -466,11 +473,11 @@ const Index = () => {
                   <Mail className="text-purple-600 group-hover:text-purple-800 transition-colors duration-200" />
                   <span className="absolute left-1/2 -bottom-7 -translate-x-1/2 text-xs bg-purple-600 text-white rounded px-2 py-1 opacity-0 group-hover:opacity-100 group-hover:translate-y-1 transition-all duration-200 pointer-events-none">Mail</span>
                 </a>
-                <a href="https://linkedin.com/in/bobsmith" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="group relative rounded-full bg-blue-100 hover:bg-blue-300 p-2 transition-all shadow-sm transform hover:scale-125 duration-200">
+                <a href="https://linkedin.com/in/darshika-singh-762636329" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="group relative rounded-full bg-blue-100 hover:bg-blue-300 p-2 transition-all shadow-sm transform hover:scale-125 duration-200">
                   <Linkedin className="text-blue-600 group-hover:text-blue-800 transition-colors duration-200" />
                   <span className="absolute left-1/2 -bottom-7 -translate-x-1/2 text-xs bg-blue-600 text-white rounded px-2 py-1 opacity-0 group-hover:opacity-100 group-hover:translate-y-1 transition-all duration-200 pointer-events-none">LinkedIn</span>
                 </a>
-                <a href="https://github.com/bobsmith" target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="group relative rounded-full bg-gray-100 hover:bg-gray-300 p-2 transition-all shadow-sm transform hover:scale-125 duration-200">
+                <a href="https://github.com/darshikasingh0905" target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="group relative rounded-full bg-gray-100 hover:bg-gray-300 p-2 transition-all shadow-sm transform hover:scale-125 duration-200">
                   <Github className="text-gray-700 group-hover:text-black transition-colors duration-200" />
                   <span className="absolute left-1/2 -bottom-7 -translate-x-1/2 text-xs bg-gray-700 text-white rounded px-2 py-1 opacity-0 group-hover:opacity-100 group-hover:translate-y-1 transition-all duration-200 pointer-events-none">GitHub</span>
                 </a>
